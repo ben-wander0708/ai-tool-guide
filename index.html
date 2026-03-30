@@ -5,393 +5,240 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Claudeの始め方ガイド</title>
 <style>
-  :root {
-    --bg: #f8f9fa; --card: #fff; --primary: #D97757; --primary-light: #fef3ee;
-    --text: #1e293b; --text-sub: #64748b; --border: #e2e8f0;
-    --success-light: #ecfdf5; --warning: #d97706; --warning-light: #fffbeb;
-    --blue-light: #eff6ff; --purple-light: #f5f3ff; --radius: 12px;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
-  .container { max-width: 640px; margin: 0 auto; padding: 24px 16px; }
-  header { text-align: center; padding: 32px 0 24px; }
-  header h1 { font-size: 1.5rem; font-weight: 700; margin-bottom: 8px; }
-  header p { color: var(--text-sub); font-size: 0.9rem; }
-  .progress-bar { width: 100%; height: 6px; background: var(--border); border-radius: 3px; margin-bottom: 32px; overflow: hidden; }
-  .progress-fill { height: 100%; background: var(--primary); border-radius: 3px; transition: width 0.4s ease; }
-  .card { background: var(--card); border-radius: var(--radius); padding: 32px 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); animation: fadeIn 0.3s ease; }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-  .card h2 { font-size: 1.2rem; font-weight: 700; margin-bottom: 16px; }
-  .card h3 { font-size: 1rem; font-weight: 600; margin: 20px 0 8px; }
-  .card p { margin-bottom: 12px; font-size: 0.93rem; }
-  .card ul, .card ol { padding-left: 20px; margin-bottom: 12px; }
-  .card li { margin-bottom: 6px; font-size: 0.9rem; }
-  .intro-tagline { text-align: center; color: var(--text-sub); font-size: 0.9rem; margin-bottom: 20px; }
-  .family-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 16px 0; }
-  .family-item { background: var(--bg); border-radius: 8px; padding: 14px; text-align: center; }
-  .family-item .fi-icon { font-size: 1.5rem; margin-bottom: 4px; }
-  .family-item .fi-name { font-weight: 600; font-size: 0.85rem; }
-  .family-item .fi-desc { color: var(--text-sub); font-size: 0.75rem; margin-top: 2px; }
-  .question-number { font-size: 0.8rem; color: var(--primary); font-weight: 600; letter-spacing: 0.05em; margin-bottom: 8px; }
-  .question-text { font-size: 1.15rem; font-weight: 600; margin-bottom: 20px; }
-  .options { display: flex; flex-direction: column; gap: 10px; }
-  .option-btn { display: flex; align-items: flex-start; gap: 12px; width: 100%; padding: 14px; background: var(--bg); border: 2px solid var(--border); border-radius: 10px; cursor: pointer; text-align: left; font-size: 0.93rem; color: var(--text); transition: all 0.15s ease; font-family: inherit; line-height: 1.5; }
-  .option-btn:hover { border-color: var(--primary); background: var(--primary-light); }
-  .option-btn:active { transform: scale(0.98); }
-  .option-icon { font-size: 1.3rem; flex-shrink: 0; margin-top: 1px; }
-  .option-content strong { display: block; margin-bottom: 2px; }
-  .option-content span { color: var(--text-sub); font-size: 0.82rem; }
-  .result-card { background: var(--card); border-radius: var(--radius); overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); animation: fadeIn 0.3s ease; }
-  .result-header { padding: 24px; text-align: center; }
-  .result-header.type-a { background: var(--success-light); }
-  .result-header.type-b { background: var(--blue-light); }
-  .result-header.type-c { background: var(--warning-light); }
-  .result-header.type-d { background: var(--purple-light); }
-  .result-emoji { font-size: 2.5rem; margin-bottom: 8px; }
-  .result-title { font-size: 1.25rem; font-weight: 700; }
-  .result-subtitle { color: var(--text-sub); font-size: 0.88rem; margin-top: 4px; }
-  .result-body { padding: 24px; }
-  .result-body h3 { font-size: 1rem; font-weight: 600; margin: 20px 0 10px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
-  .result-body h3:first-child { margin-top: 0; }
-  .result-body ul, .result-body ol { padding-left: 20px; }
-  .result-body li { margin-bottom: 6px; font-size: 0.9rem; }
-  .result-body p { font-size: 0.9rem; margin-bottom: 10px; }
-  .info-box { background: var(--bg); border-radius: 8px; padding: 14px 16px; margin: 12px 0; font-size: 0.86rem; }
-  .info-box.warn { background: #fef3c7; border-left: 3px solid var(--warning); }
-  .tbl { width: 100%; border-collapse: collapse; font-size: 0.82rem; margin: 12px 0; }
-  .tbl th, .tbl td { padding: 7px 9px; border: 1px solid var(--border); text-align: left; }
-  .tbl th { background: var(--bg); font-weight: 600; white-space: nowrap; }
-  .btn-group { display: flex; gap: 10px; margin-top: 24px; flex-wrap: wrap; }
-  .btn { padding: 10px 20px; border-radius: 8px; font-size: 0.9rem; font-family: inherit; cursor: pointer; border: none; transition: all 0.15s ease; }
-  .btn-primary { background: var(--primary); color: #fff; flex: 1; }
-  .btn-primary:hover { opacity: 0.9; }
-  .btn-secondary { background: var(--bg); color: var(--text); border: 1px solid var(--border); }
-  .btn-secondary:hover { background: var(--border); }
-  .back-link { display: inline-flex; align-items: center; gap: 4px; color: var(--text-sub); font-size: 0.85rem; text-decoration: none; cursor: pointer; margin-bottom: 16px; }
-  .back-link:hover { color: var(--text); }
-  footer { text-align: center; padding: 32px 0; color: var(--text-sub); font-size: 0.78rem; }
-  hr.sep { margin: 24px 0; border: none; border-top: 1px solid var(--border); }
+  :root{--bg:#f8f9fa;--card:#fff;--primary:#D97757;--primary-light:#fef3ee;--text:#1e293b;--text-sub:#64748b;--border:#e2e8f0;--sl:#ecfdf5;--wl:#fffbeb;--w:#d97706;--bl:#eff6ff;--pl:#f5f3ff;--r:12px}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;background:var(--bg);color:var(--text);line-height:1.7}
+  .c{max-width:640px;margin:0 auto;padding:24px 16px}
+  header{text-align:center;padding:32px 0 24px}
+  header h1{font-size:1.5rem;font-weight:700;margin-bottom:8px}
+  header p{color:var(--text-sub);font-size:.9rem}
+  .pb{width:100%;height:6px;background:var(--border);border-radius:3px;margin-bottom:32px;overflow:hidden}
+  .pf{height:100%;background:var(--primary);border-radius:3px;transition:width .4s ease}
+  .card{background:var(--card);border-radius:var(--r);padding:32px 24px;box-shadow:0 1px 3px rgba(0,0,0,.08);animation:fi .3s ease}
+  @keyframes fi{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+  .card h2{font-size:1.2rem;font-weight:700;margin-bottom:16px}
+  .card h3{font-size:1rem;font-weight:600;margin:20px 0 8px}
+  .card p{margin-bottom:12px;font-size:.93rem}
+  .card ul,.card ol{padding-left:20px;margin-bottom:12px}
+  .card li{margin-bottom:6px;font-size:.9rem}
+  .it{text-align:center;color:var(--text-sub);font-size:.9rem;margin-bottom:20px}
+  .fg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0}
+  .fi{background:var(--bg);border-radius:8px;padding:14px;text-align:center}
+  .fi .ic{font-size:1.5rem;margin-bottom:4px}
+  .fi .nm{font-weight:600;font-size:.85rem}
+  .fi .ds{color:var(--text-sub);font-size:.75rem;margin-top:2px}
+  .qn{font-size:.8rem;color:var(--primary);font-weight:600;letter-spacing:.05em;margin-bottom:8px}
+  .qt{font-size:1.15rem;font-weight:600;margin-bottom:20px}
+  .opts{display:flex;flex-direction:column;gap:10px}
+  .ob{display:flex;align-items:flex-start;gap:12px;width:100%;padding:14px;background:var(--bg);border:2px solid var(--border);border-radius:10px;cursor:pointer;text-align:left;font-size:.93rem;color:var(--text);transition:all .15s ease;font-family:inherit;line-height:1.5}
+  .ob:hover{border-color:var(--primary);background:var(--primary-light)}
+  .ob:active{transform:scale(.98)}
+  .oi{font-size:1.3rem;flex-shrink:0;margin-top:1px}
+  .oc strong{display:block;margin-bottom:2px}
+  .oc span{color:var(--text-sub);font-size:.82rem}
+  .rc{background:var(--card);border-radius:var(--r);overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.08);animation:fi .3s ease}
+  .rh{padding:24px;text-align:center}
+  .rh.ta{background:var(--sl)}.rh.tb{background:var(--bl)}.rh.tc{background:var(--wl)}.rh.td{background:var(--pl)}
+  .re{font-size:2.5rem;margin-bottom:8px}
+  .rt{font-size:1.25rem;font-weight:700}
+  .rs{color:var(--text-sub);font-size:.88rem;margin-top:4px}
+  .rb{padding:24px}
+  .rb h3{font-size:1rem;font-weight:600;margin:20px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+  .rb h3:first-child{margin-top:0}
+  .rb ul,.rb ol{padding-left:20px}
+  .rb li{margin-bottom:6px;font-size:.9rem}
+  .rb p{font-size:.9rem;margin-bottom:10px}
+  .ib{background:var(--bg);border-radius:8px;padding:14px 16px;margin:12px 0;font-size:.86rem}
+  .ib.w{background:#fef3c7;border-left:3px solid var(--w)}
+  .t{width:100%;border-collapse:collapse;font-size:.82rem;margin:12px 0}
+  .t th,.t td{padding:7px 9px;border:1px solid var(--border);text-align:left}
+  .t th{background:var(--bg);font-weight:600;white-space:nowrap}
+  .bg{display:flex;gap:10px;margin-top:24px;flex-wrap:wrap}
+  .btn{padding:10px 20px;border-radius:8px;font-size:.9rem;font-family:inherit;cursor:pointer;border:none;transition:all .15s ease}
+  .bp{background:var(--primary);color:#fff;flex:1}
+  .bp:hover{opacity:.9}
+  .bs{background:var(--bg);color:var(--text);border:1px solid var(--border)}
+  .bs:hover{background:var(--border)}
+  .bl{display:inline-flex;align-items:center;gap:4px;color:var(--text-sub);font-size:.85rem;text-decoration:none;cursor:pointer;margin-bottom:16px}
+  .bl:hover{color:var(--text)}
+  footer{text-align:center;padding:32px 0;color:var(--text-sub);font-size:.78rem}
+  hr.sep{margin:24px 0;border:none;border-top:1px solid var(--border)}
 </style>
 </head>
 <body>
-<div class="container">
-  <header>
-    <h1>Claudeの始め方ガイド</h1>
-    <p>あなたに合った使い方が見つかります</p>
-  </header>
-  <div class="progress-bar"><div class="progress-fill" id="progress" style="width:0%"></div></div>
-  <div id="content"></div>
+<div class="c">
+  <header><h1>Claudeの始め方ガイド</h1><p>あなたに合った使い方が見つかります</p></header>
+  <div class="pb"><div class="pf" id="pg" style="width:0%"></div></div>
+  <div id="ct"></div>
   <footer>作成: 2026-03-30 | 情報は作成時点のものです</footer>
 </div>
-
-<!-- ======= INTRO ======= -->
-<template id="tmpl-intro">
-  <div class="card">
-    <div style="font-size:3rem;text-align:center;margin-bottom:16px">💡</div>
-    <h2 style="text-align:center">始める前に知っておくこと</h2>
-    <p class="intro-tagline">このガイドは「ClaudeというAIをWindowsで使いたい」人のためのものです。<br>診断に進む前に、3つだけ知っておいてください。</p>
-
-    <h3>① AIツールは「1種類」じゃない</h3>
-    <p>Claudeには<strong>ブラウザで使うもの、PCにインストールするもの、コマンドラインで使うもの</strong>など、複数の形があります。ChatGPTにもアプリ版とWeb版があるのと同じです。<br>「Claudeを使いたい」だけでは始められません。<strong>どの形で使うか</strong>を決める必要があります。</p>
-
-    <h3>② 「クラウドで使いたい」の意味</h3>
-    <p>もし「クラウドで使いたい」と思っているなら、それはほぼ確実に<strong>「ブラウザで、インストールなしで、どのPCからでも使いたい」</strong>という意味です。<br>その場合、実は一番シンプルなブラウザ版（claude.ai）だけで目的が達成できる可能性が高いです。</p>
-
-    <h3>③ コードが書けなくてもAIに作業させられる</h3>
-    <p>「自動化」「ファイル操作」と聞くとプログラマー向けに感じますが、<strong>日本語で指示するだけでAIがコードを書いて実行してくれる</strong>ツールがあります。<br>ただし、そのためにはブラウザ版ではなくアプリ版やCLI版が必要です。</p>
-
-    <hr class="sep">
-
-    <h3>Claudeの4つの使い方</h3>
-    <p>「どの形を選ぶか」で、できること・難しさ・料金が全部変わります。</p>
-
-    <div class="family-grid">
-      <div class="family-item"><div class="fi-icon">💬</div><div class="fi-name">Claude.ai</div><div class="fi-desc">ブラウザでチャット<br>セットアップ不要</div></div>
-      <div class="family-item"><div class="fi-icon">🖥️</div><div class="fi-name">デスクトップアプリ</div><div class="fi-desc">PCにインストール<br>ファイル操作もAIにお任せ</div></div>
-      <div class="family-item"><div class="fi-icon">💻</div><div class="fi-name">Cursor / VS Code</div><div class="fi-desc">コードエディタ + AI<br>自分で書く人向け</div></div>
-      <div class="family-item"><div class="fi-icon">⚡</div><div class="fi-name">Claude Code CLI</div><div class="fi-desc">ターミナルで動くAI<br>上級者向け</div></div>
-    </div>
-
-    <table class="tbl">
-      <tr><th></th><th>Claude.ai</th><th>デスクトップ</th><th>Cursor等</th><th>CLI</th></tr>
-      <tr><td><strong>難しさ</strong></td><td>★</td><td>★★</td><td>★★</td><td>★★★★</td></tr>
-      <tr><td><strong>PCのファイルを<br>操作できる？</strong></td><td>❌</td><td>✅</td><td>✅</td><td>✅</td></tr>
-      <tr><td><strong>出力の受取り</strong></td><td>コピペで<br>自分で保存</td><td>AIが直接<br>ファイル保存</td><td>エディタ上<br>で編集</td><td>AIが自動<br>で実行</td></tr>
-      <tr><td><strong>月額</strong></td><td>無料〜$20</td><td>$20〜</td><td>無料〜$20</td><td>従量課金</td></tr>
-    </table>
-
-    <div class="info-box">💡 <strong>どれを選べばいいかわからなくて当然です。</strong><br>次の診断（2〜3問）で、あなたの「やりたいこと」から最適な使い方を案内します。</div>
-
-    <div class="btn-group"><button class="btn btn-primary" onclick="startQuiz()">診断をはじめる →</button></div>
-  </div>
-</template>
-
-<!-- ======= RESULTS ======= -->
-<template id="tmpl-result-a">
-  <h3>これは何？</h3>
-  <p>ブラウザで使えるAIチャットです。PCにもスマホにも何もインストールする必要がありません。</p>
-  <h3>始め方（5分）</h3>
-  <ol>
-    <li><a href="https://claude.ai" target="_blank">claude.ai</a> を開く</li>
-    <li>「Sign up」でアカウント作成（メールまたはGoogle）</li>
-    <li>ログインしたら、テキストボックスに質問を入力して送信</li>
-  </ol>
-  <h3>できること</h3>
-  <ul>
-    <li>文章の作成・要約・翻訳</li>
-    <li>アイデアの壁打ち・整理</li>
-    <li>PDF・Excelファイルの分析（アップロード）</li>
-    <li>コードの生成・説明</li>
-  </ul>
-  <h3>できないこと</h3>
-  <ul>
-    <li>あなたのPCのファイルを直接操作する（コピペで受け取る必要あり）</li>
-    <li>コマンドの自動実行</li>
-  </ul>
-  <h3>料金</h3>
-  <table class="tbl">
-    <tr><th>プラン</th><th>月額</th><th>内容</th></tr>
-    <tr><td>無料</td><td>¥0</td><td>基本機能（回数制限あり）</td></tr>
-    <tr><td>Pro</td><td>約¥3,000</td><td>利用回数が大幅増加、高性能モデル</td></tr>
-  </table>
-  <div class="info-box">💡 <strong>「クラウドで使いたい」ならこれが答え。</strong><br>ブラウザさえあればどのPC・スマホからでも使えます。まず無料で試して、回数制限が気になったらProに。</div>
-  <div class="info-box">🔄 <strong>もっとやりたくなったら？</strong><br>「AIにファイルを直接操作させたい」と思ったら、デスクトップアプリを検討してください。同じClaudeアカウントで使えます。</div>
-</template>
-
-<template id="tmpl-result-d">
-  <h3>これは何？</h3>
-  <p>PCにインストールして使うClaude。ブラウザ版との最大の違いは、<strong>あなたのPCのファイルを直接読み書きしたり、コマンドを実行できる</strong>ことです。</p>
-  <h3>ブラウザ版との違い</h3>
-  <table class="tbl">
-    <tr><th></th><th>Claude.ai（ブラウザ）</th><th>デスクトップアプリ</th></tr>
-    <tr><td><strong>例えるなら</strong></td><td>賢い相談相手</td><td>PCを操作できる助手</td></tr>
-    <tr><td><strong>ファイル操作</strong></td><td>❌ コピペで受取</td><td>✅ 直接保存・編集</td></tr>
-    <tr><td><strong>コマンド実行</strong></td><td>❌</td><td>✅</td></tr>
-    <tr><td><strong>料金</strong></td><td>無料〜$20/月</td><td>$20/月〜（Pro必須）</td></tr>
-  </table>
-  <h3>具体例</h3>
-  <p>「Pythonスクリプトを作って」と頼んだ場合：</p>
-  <ul>
-    <li><strong>ブラウザ版</strong>：コードが画面に表示 → 自分でコピーしてファイルに保存</li>
-    <li><strong>デスクトップアプリ</strong>：ファイルを自動作成して保存。実行までしてくれる</li>
-  </ul>
-  <h3>始め方（15分）</h3>
-  <ol>
-    <li><a href="https://claude.ai/download" target="_blank">claude.ai/download</a> からWindows版をダウンロード</li>
-    <li>ダウンロードしたファイルをダブルクリックしてインストール</li>
-    <li>Claudeアカウントでログイン（なければ作成）</li>
-    <li>フォルダを開いて「このフォルダのファイルを整理して」のように頼む</li>
-  </ol>
-  <h3>料金</h3>
-  <table class="tbl">
-    <tr><th>プラン</th><th>月額</th><th>デスクトップアプリ</th></tr>
-    <tr><td>無料</td><td>¥0</td><td>⚠️ 機能制限あり</td></tr>
-    <tr><td>Pro</td><td>約¥3,000</td><td>✅ フル利用可能</td></tr>
-    <tr><td>Max</td><td>約¥15,000</td><td>✅ ほぼ無制限</td></tr>
-  </table>
-  <div class="info-box">💡 <strong>コマンドラインが苦手でもOK。</strong><br>チャット画面で日本語で指示するだけ。AIが裏側でコマンドを実行してくれます。</div>
-  <div class="info-box warn">⚠️ <strong>注意：AIがファイルを操作します</strong><br>初回は重要でないフォルダで試してください。AIがファイルを変更・削除する前に確認画面が出ますが、念のため。</div>
-</template>
-
-<template id="tmpl-result-b-cursor">
-  <h3>これは何？</h3>
-  <p>最初からAIが内蔵されたコードエディタです。コードを見ながらAIとチャットして開発できます。</p>
-  <h3>始め方（15分）</h3>
-  <ol>
-    <li><a href="https://www.cursor.com/" target="_blank">cursor.com</a> で「Download」をクリック</li>
-    <li>ダウンロードしたファイルをダブルクリックしてインストール</li>
-    <li>アカウント作成（メールまたはGitHub）</li>
-    <li><code>Ctrl + L</code> でAIチャットを開いて質問する</li>
-  </ol>
-  <h3>無料でできること</h3>
-  <ul>
-    <li>月500回のAIコード補完</li>
-    <li>月50回のAIチャット（高性能モデル）</li>
-  </ul>
-  <h3>Cursor と VS Code の違い</h3>
-  <table class="tbl">
-    <tr><th></th><th>Cursor</th><th>VS Code</th></tr>
-    <tr><td><strong>一言で</strong></td><td>AI内蔵エディタ</td><td>世界標準エディタ + AI後付け</td></tr>
-    <tr><td><strong>AI機能</strong></td><td>最初から使える</td><td>拡張を自分で追加</td></tr>
-    <tr><td><strong>インストール</strong></td><td>1回で完了</td><td>本体 + 拡張の2段階</td></tr>
-    <tr><td><strong>無料枠</strong></td><td>月500補完 + 50チャット</td><td>拡張による</td></tr>
-    <tr><td><strong>ネットの情報量</strong></td><td>少なめ</td><td>非常に多い</td></tr>
-    <tr><td><strong>開発元</strong></td><td>Cursor社</td><td>Microsoft</td></tr>
-  </table>
-  <div class="info-box">💡 <strong>迷ったらCursorから。</strong>VS Codeとほぼ同じ操作なので、後から乗り換えも簡単です。</div>
-</template>
-
-<template id="tmpl-result-b-vscode">
-  <h3>既にVS Codeをお持ちなら</h3>
-  <p>AI拡張を1つ追加するだけでOKです。</p>
-  <h3>おすすめのAI拡張</h3>
-  <table class="tbl">
-    <tr><th>拡張</th><th>料金</th><th>特徴</th></tr>
-    <tr><td><strong>GitHub Copilot</strong></td><td>無料枠あり / 月$10〜</td><td>最も普及。コード補完が得意</td></tr>
-    <tr><td><strong>Claude Code拡張</strong></td><td>API従量課金</td><td>Claudeのフル性能</td></tr>
-    <tr><td><strong>Cline</strong></td><td>API従量課金</td><td>複数のAIモデルを選べる</td></tr>
-  </table>
-  <h3>インストール方法</h3>
-  <ol>
-    <li>VS Codeを開く</li>
-    <li>左サイドバーの拡張機能アイコン（□が4つ）をクリック</li>
-    <li>検索バーに拡張名を入力</li>
-    <li>「Install」をクリック</li>
-  </ol>
-  <h3>Cursor と VS Code の違い</h3>
-  <table class="tbl">
-    <tr><th></th><th>Cursor</th><th>VS Code</th></tr>
-    <tr><td><strong>一言で</strong></td><td>AI内蔵エディタ</td><td>世界標準エディタ + AI後付け</td></tr>
-    <tr><td><strong>AI機能</strong></td><td>最初から使える</td><td>拡張を自分で追加</td></tr>
-    <tr><td><strong>インストール</strong></td><td>1回で完了</td><td>本体 + 拡張の2段階</td></tr>
-    <tr><td><strong>無料枠</strong></td><td>月500補完 + 50チャット</td><td>拡張による</td></tr>
-    <tr><td><strong>ネットの情報量</strong></td><td>少なめ</td><td>非常に多い</td></tr>
-    <tr><td><strong>開発元</strong></td><td>Cursor社</td><td>Microsoft</td></tr>
-  </table>
-</template>
-
-<template id="tmpl-result-c">
-  <h3>これは何？</h3>
-  <p>ターミナル（コマンドライン）で動くAIエージェントです。デスクトップアプリと似ていますが、<strong>より高度な自動化やスクリプト連携</strong>ができます。</p>
-  <h3>デスクトップアプリとの違い</h3>
-  <table class="tbl">
-    <tr><th></th><th>デスクトップアプリ</th><th>CLI</th></tr>
-    <tr><td><strong>操作</strong></td><td>GUI（画面クリック）</td><td>ターミナル（テキスト入力）</td></tr>
-    <tr><td><strong>難易度</strong></td><td>★★</td><td>★★★★</td></tr>
-    <tr><td><strong>自動化の柔軟性</strong></td><td>○</td><td>◎（スクリプト連携可）</td></tr>
-    <tr><td><strong>料金</strong></td><td>Pro $20/月〜</td><td>API従量課金</td></tr>
-  </table>
-  <h3>Windowsでの始め方</h3>
-  <table class="tbl">
-    <tr><th>方法</th><th>難易度</th><th>特徴</th></tr>
-    <tr><td><strong>① VS Code拡張</strong></td><td>★★</td><td>GUIから操作可能。最も簡単</td></tr>
-    <tr><td><strong>② WSL2 + CLI</strong></td><td>★★★★</td><td>フル機能。Windows内にLinux環境を作る</td></tr>
-    <tr><td><strong>③ GitHub Codespaces</strong></td><td>★★★</td><td>ブラウザ完結。月60時間無料</td></tr>
-  </table>
-  <h3>まずは方法①（VS Code拡張）</h3>
-  <ol>
-    <li><a href="https://code.visualstudio.com/" target="_blank">VS Code</a> をインストール</li>
-    <li>左サイドバーの拡張機能アイコンをクリック</li>
-    <li>「Claude Code」を検索して「Install」</li>
-    <li>Anthropicアカウントでサインイン</li>
-  </ol>
-  <div class="info-box warn">⚠️ <strong>コスト管理は必ず設定</strong><br>API従量課金です。<a href="https://console.anthropic.com/" target="_blank">Anthropicコンソール</a> → Settings → Spend Limits で月の上限額を設定（最初は$20がおすすめ）。<br><br><strong>APIキーは銀行の暗証番号と同じくらい大切。</strong>他人に送らない・ネットに公開しない。</div>
-  <h3>料金の目安</h3>
-  <ul>
-    <li>軽い使い方：月$5〜20（約750〜3,000円）</li>
-    <li>ヘビーユース：月$20〜50（約3,000〜7,500円）</li>
-  </ul>
-</template>
-
 <script>
-var questions = [
-  {
-    id: 'q1', number: 'Question 1 / 3',
-    text: 'Claudeで何がしたいですか？',
-    options: [
-      { icon: '💬', label: '相談・文章作成', desc: '要約、下書き、壁打ち、翻訳、ファイル分析など。出力はコピペでOK', next: 'result-a' },
-      { icon: '🖥️', label: 'AIにPCの作業をやらせたい', desc: 'ファイル整理、自動化、コードの生成・実行をAIに任せたい', next: 'q-auto' },
-      { icon: '💻', label: '自分でコードを書く・編集する', desc: 'プログラミング、Web開発をAIのサポートを受けながら行いたい', next: 'q-editor' },
-      { icon: '🤔', label: 'まだ決まっていない', desc: 'とりあえずAIを触ってみたい', next: 'result-a' }
-    ]
-  },
-  {
-    id: 'q-auto', number: 'Question 2 / 3',
-    text: 'コマンドライン（黒い画面にテキストを打つ操作）に抵抗はありますか？',
-    options: [
-      { icon: '😊', label: '抵抗はない / 使ったことがある', desc: 'ターミナルやコマンドプロンプトを触ったことがある', next: 'result-c' },
-      { icon: '🙂', label: 'よくわからないけど、やってみたい', desc: 'ガイド通りにやれば大丈夫そう', next: 'result-d' },
-      { icon: '😰', label: '抵抗がある / GUIで操作したい', desc: '画面をクリックする操作の方がいい', next: 'result-d' }
-    ]
-  },
-  {
-    id: 'q-editor', number: 'Question 2 / 3',
-    text: 'コードエディタを使ったことはありますか？',
-    options: [
-      { icon: '✅', label: 'VS Codeを使っている', desc: 'Visual Studio Codeをインストール済み', next: 'result-b-vscode' },
-      { icon: '🔧', label: '他のエディタを使っている', desc: 'Sublime Text、Atom、サクラエディタなど', next: 'result-b-cursor' },
-      { icon: '🆕', label: '使ったことがない', desc: 'コードエディタが何かよくわからない', next: 'result-b-cursor' }
-    ]
-  }
-];
+var H=[];
+var CT=document.getElementById('ct');
+var PG=document.getElementById('pg');
 
-var resultMeta = {
-  'result-a':        { type: 'type-a', emoji: '💬', title: 'Claude.ai（ブラウザ版）', subtitle: 'セットアップ不要 — 今すぐ始められます', tmpl: 'tmpl-result-a' },
-  'result-d':        { type: 'type-d', emoji: '🖥️', title: 'Claude Codeデスクトップアプリ', subtitle: 'インストールするだけ — AIにPCを操作させよう', tmpl: 'tmpl-result-d' },
-  'result-b-cursor': { type: 'type-b', emoji: '⚡', title: 'Cursor（AI内蔵エディタ）', subtitle: 'インストールするだけ — 15分で開始', tmpl: 'tmpl-result-b-cursor' },
-  'result-b-vscode': { type: 'type-b', emoji: '🔧', title: 'VS Code + AI拡張', subtitle: '使い慣れた環境にAIを追加 — 15分で開始', tmpl: 'tmpl-result-b-vscode' },
-  'result-c':        { type: 'type-c', emoji: '⚡', title: 'Claude Code CLI', subtitle: 'セットアップ30〜60分 — フル機能の自動化エージェント', tmpl: 'tmpl-result-c' }
+function sp(p){PG.style.width=p+'%'}
+
+var CVT='<h3>Cursor と VS Code の違い</h3>'
++'<table class="t"><tr><th></th><th>Cursor</th><th>VS Code</th></tr>'
++'<tr><td><strong>一言で</strong></td><td>AI内蔵エディタ</td><td>世界標準エディタ + AI後付け</td></tr>'
++'<tr><td><strong>AI機能</strong></td><td>最初から使える</td><td>拡張を自分で追加</td></tr>'
++'<tr><td><strong>インストール</strong></td><td>1回で完了</td><td>本体 + 拡張の2段階</td></tr>'
++'<tr><td><strong>無料枠</strong></td><td>月500補完 + 50チャット</td><td>拡張による</td></tr>'
++'<tr><td><strong>ネットの情報量</strong></td><td>少なめ</td><td>非常に多い</td></tr>'
++'<tr><td><strong>開発元</strong></td><td>Cursor社</td><td>Microsoft</td></tr></table>';
+
+function intro(){
+  sp(0); H=[];
+  CT.innerHTML='<div class="card">'
+  +'<div style="font-size:3rem;text-align:center;margin-bottom:16px">💡</div>'
+  +'<h2 style="text-align:center">始める前に知っておくこと</h2>'
+  +'<p class="it">このガイドは「ClaudeというAIをWindowsで使いたい」人のためのものです。<br>診断に進む前に、3つだけ知っておいてください。</p>'
+
+  +'<h3>① AIツールは「1種類」じゃない</h3>'
+  +'<p>Claudeには<strong>ブラウザで使うもの、PCにインストールするもの、コマンドラインで使うもの</strong>など、複数の形があります。ChatGPTにもアプリ版とWeb版があるのと同じです。<br>「Claudeを使いたい」だけでは始められません。<strong>どの形で使うか</strong>を決める必要があります。</p>'
+
+  +'<h3>② 「クラウドで使いたい」の意味</h3>'
+  +'<p>もし「クラウドで使いたい」と思っているなら、それはほぼ確実に<strong>「ブラウザで、インストールなしで、どのPCからでも使いたい」</strong>という意味です。<br>その場合、実は一番シンプルなブラウザ版（claude.ai）だけで目的が達成できる可能性が高いです。</p>'
+
+  +'<h3>③ コードが書けなくてもAIに作業させられる</h3>'
+  +'<p>「自動化」「ファイル操作」と聞くとプログラマー向けに感じますが、<strong>日本語で指示するだけでAIがコードを書いて実行してくれる</strong>ツールがあります。<br>ただし、そのためにはブラウザ版ではなくアプリ版やCLI版が必要です。</p>'
+
+  +'<hr class="sep">'
+
+  +'<h3>Claudeの4つの使い方</h3>'
+  +'<p>「どの形を選ぶか」で、できること・難しさ・料金が全部変わります。</p>'
+
+  +'<div class="fg">'
+  +'<div class="fi"><div class="ic">💬</div><div class="nm">Claude.ai</div><div class="ds">ブラウザでチャット<br>セットアップ不要</div></div>'
+  +'<div class="fi"><div class="ic">🖥️</div><div class="nm">デスクトップアプリ</div><div class="ds">PCにインストール<br>ファイル操作もAIにお任せ</div></div>'
+  +'<div class="fi"><div class="ic">💻</div><div class="nm">Cursor / VS Code</div><div class="ds">コードエディタ + AI<br>自分で書く人向け</div></div>'
+  +'<div class="fi"><div class="ic">⚡</div><div class="nm">Claude Code CLI</div><div class="ds">ターミナルで動くAI<br>上級者向け</div></div>'
+  +'</div>'
+
+  +'<table class="t">'
+  +'<tr><th></th><th>Claude.ai</th><th>デスクトップ</th><th>Cursor等</th><th>CLI</th></tr>'
+  +'<tr><td><strong>難しさ</strong></td><td>★</td><td>★★</td><td>★★</td><td>★★★★</td></tr>'
+  +'<tr><td><strong>PCのファイルを<br>操作できる？</strong></td><td>❌</td><td>✅</td><td>✅</td><td>✅</td></tr>'
+  +'<tr><td><strong>出力の受取り</strong></td><td>コピペで<br>自分で保存</td><td>AIが直接<br>ファイル保存</td><td>エディタ上<br>で編集</td><td>AIが自動<br>で実行</td></tr>'
+  +'<tr><td><strong>月額</strong></td><td>無料〜$20</td><td>$20〜</td><td>無料〜$20</td><td>従量課金</td></tr>'
+  +'</table>'
+
+  +'<div class="ib">💡 <strong>どれを選べばいいかわからなくて当然です。</strong><br>次の診断（2〜3問）で、あなたの「やりたいこと」から最適な使い方を案内します。</div>'
+
+  +'<div class="bg"><button class="btn bp" id="startBtn">診断をはじめる →</button></div>'
+  +'</div>';
+
+  document.getElementById('startBtn').addEventListener('click', function(){
+    H.push('intro');
+    showQ('q1');
+  });
+}
+
+var QS={
+  q1:{n:'Question 1 / 3',t:'Claudeで何がしたいですか？',o:[
+    {i:'💬',l:'相談・文章作成',d:'要約、下書き、壁打ち、翻訳、ファイル分析など。出力はコピペでOK',x:'result-a'},
+    {i:'🖥️',l:'AIにPCの作業をやらせたい',d:'ファイル整理、自動化、コードの生成・実行をAIに任せたい',x:'q-auto'},
+    {i:'💻',l:'自分でコードを書く・編集する',d:'プログラミング、Web開発をAIのサポートを受けながら行いたい',x:'q-editor'},
+    {i:'🤔',l:'まだ決まっていない',d:'とりあえずAIを触ってみたい',x:'result-a'}
+  ]},
+  'q-auto':{n:'Question 2 / 3',t:'コマンドライン（黒い画面にテキストを打つ操作）に抵抗はありますか？',o:[
+    {i:'😊',l:'抵抗はない / 使ったことがある',d:'ターミナルやコマンドプロンプトを触ったことがある',x:'result-c'},
+    {i:'🙂',l:'よくわからないけど、やってみたい',d:'ガイド通りにやれば大丈夫そう',x:'result-d'},
+    {i:'😰',l:'抵抗がある / GUIで操作したい',d:'画面をクリックする操作の方がいい',x:'result-d'}
+  ]},
+  'q-editor':{n:'Question 2 / 3',t:'コードエディタを使ったことはありますか？',o:[
+    {i:'✅',l:'VS Codeを使っている',d:'Visual Studio Codeをインストール済み',x:'result-b-vscode'},
+    {i:'🔧',l:'他のエディタを使っている',d:'Sublime Text、Atom、サクラエディタなど',x:'result-b-cursor'},
+    {i:'🆕',l:'使ったことがない',d:'コードエディタが何かよくわからない',x:'result-b-cursor'}
+  ]}
 };
 
-var history = [];
-
-function setProgress(pct) { document.getElementById('progress').style.width = pct + '%'; }
-
-function renderIntro() {
-  setProgress(0);
-  var t = document.getElementById('tmpl-intro');
-  document.getElementById('content').innerHTML = t.innerHTML;
-}
-
-function startQuiz() {
-  history.push({ type: 'intro' });
-  renderQuestion('q1');
-}
-
-function renderQuestion(qId) {
-  var q = null;
-  for (var i = 0; i < questions.length; i++) { if (questions[i].id === qId) { q = questions[i]; break; } }
-  if (!q) return;
-  setProgress(history.length / 4 * 100);
-
-  var h = '<a class="back-link" onclick="goBack()">&#8592; 戻る</a>';
-  h += '<div class="card"><div class="question-number">' + q.number + '</div>';
-  h += '<div class="question-text">' + q.text + '</div><div class="options">';
-  for (var i = 0; i < q.options.length; i++) {
-    var o = q.options[i];
-    h += '<button class="option-btn" onclick="selectOption(\'' + q.id + '\',' + i + ')">';
-    h += '<span class="option-icon">' + o.icon + '</span>';
-    h += '<div class="option-content"><strong>' + o.label + '</strong><span>' + o.desc + '</span></div>';
-    h += '</button>';
+function showQ(id){
+  var q=QS[id]; if(!q)return;
+  sp(H.length/4*100);
+  var h='<a class="bl" id="bk">&#8592; 戻る</a><div class="card"><div class="qn">'+q.n+'</div><div class="qt">'+q.t+'</div><div class="opts">';
+  for(var i=0;i<q.o.length;i++){
+    h+='<button class="ob" data-qid="'+id+'" data-idx="'+i+'">'
+    +'<span class="oi">'+q.o[i].i+'</span>'
+    +'<div class="oc"><strong>'+q.o[i].l+'</strong><span>'+q.o[i].d+'</span></div></button>';
   }
-  h += '</div></div>';
-  document.getElementById('content').innerHTML = h;
+  h+='</div></div>';
+  CT.innerHTML=h;
+  document.getElementById('bk').addEventListener('click',goBack);
+  var btns=CT.querySelectorAll('.ob');
+  for(var j=0;j<btns.length;j++){
+    btns[j].addEventListener('click',function(){
+      var qid=this.getAttribute('data-qid');
+      var idx=parseInt(this.getAttribute('data-idx'));
+      var opt=QS[qid].o[idx];
+      H.push(qid);
+      if(opt.x.indexOf('result-')===0){showR(opt.x);}
+      else{showQ(opt.x);}
+    });
+  }
 }
 
-function renderResult(rid) {
-  var r = resultMeta[rid];
-  if (!r) return;
-  setProgress(100);
-  var body = document.getElementById(r.tmpl).innerHTML;
-  var h = '<a class="back-link" onclick="goBack()">&#8592; 戻る</a>';
-  h += '<div class="result-card"><div class="result-header ' + r.type + '">';
-  h += '<div class="result-emoji">' + r.emoji + '</div>';
-  h += '<div class="result-title">' + r.title + '</div>';
-  h += '<div class="result-subtitle">' + r.subtitle + '</div></div>';
-  h += '<div class="result-body">' + body + '</div></div>';
-  h += '<div class="btn-group"><button class="btn btn-secondary" onclick="restart()">最初からやり直す</button></div>';
-  document.getElementById('content').innerHTML = h;
+var RS={
+  'result-a':{c:'ta',e:'💬',t:'Claude.ai（ブラウザ版）',s:'セットアップ不要 — 今すぐ始められます',
+    b:'<h3>これは何？</h3><p>ブラウザで使えるAIチャットです。PCにもスマホにも何もインストールする必要がありません。</p>'
+    +'<h3>始め方（5分）</h3><ol><li><a href="https://claude.ai" target="_blank">claude.ai</a> を開く</li><li>「Sign up」でアカウント作成（メールまたはGoogle）</li><li>ログインしたら、テキストボックスに質問を入力して送信</li></ol>'
+    +'<h3>できること</h3><ul><li>文章の作成・要約・翻訳</li><li>アイデアの壁打ち・整理</li><li>PDF・Excelファイルの分析（アップロード）</li><li>コードの生成・説明</li></ul>'
+    +'<h3>できないこと</h3><ul><li>あなたのPCのファイルを直接操作する（コピペで受け取る必要あり）</li><li>コマンドの自動実行</li></ul>'
+    +'<h3>料金</h3><table class="t"><tr><th>プラン</th><th>月額</th><th>内容</th></tr><tr><td>無料</td><td>¥0</td><td>基本機能（回数制限あり）</td></tr><tr><td>Pro</td><td>約¥3,000</td><td>利用回数が大幅増加、高性能モデル</td></tr></table>'
+    +'<div class="ib">💡 <strong>「クラウドで使いたい」ならこれが答え。</strong><br>ブラウザさえあればどのPC・スマホからでも使えます。まず無料で試して、回数制限が気になったらProに。</div>'
+    +'<div class="ib">🔄 <strong>もっとやりたくなったら？</strong><br>「AIにファイルを直接操作させたい」と思ったら、デスクトップアプリを検討してください。同じClaudeアカウントで使えます。</div>'},
+
+  'result-d':{c:'td',e:'🖥️',t:'Claude Codeデスクトップアプリ',s:'インストールするだけ — AIにPCを操作させよう',
+    b:'<h3>これは何？</h3><p>PCにインストールして使うClaude。ブラウザ版との最大の違いは、<strong>あなたのPCのファイルを直接読み書きしたり、コマンドを実行できる</strong>ことです。</p>'
+    +'<h3>ブラウザ版との違い</h3><table class="t"><tr><th></th><th>Claude.ai（ブラウザ）</th><th>デスクトップアプリ</th></tr><tr><td><strong>例えるなら</strong></td><td>賢い相談相手</td><td>PCを操作できる助手</td></tr><tr><td><strong>ファイル操作</strong></td><td>❌ コピペで受取</td><td>✅ 直接保存・編集</td></tr><tr><td><strong>コマンド実行</strong></td><td>❌</td><td>✅</td></tr><tr><td><strong>料金</strong></td><td>無料〜$20/月</td><td>$20/月〜（Pro必須）</td></tr></table>'
+    +'<h3>具体例</h3><p>「Pythonスクリプトを作って」と頼んだ場合：</p><ul><li><strong>ブラウザ版</strong>：コードが画面に表示 → 自分でコピーしてファイルに保存</li><li><strong>デスクトップアプリ</strong>：ファイルを自動作成して保存。実行までしてくれる</li></ul>'
+    +'<h3>始め方（15分）</h3><ol><li><a href="https://claude.ai/download" target="_blank">claude.ai/download</a> からWindows版をダウンロード</li><li>ダウンロードしたファイルをダブルクリックしてインストール</li><li>Claudeアカウントでログイン（なければ作成）</li><li>フォルダを開いて「このフォルダのファイルを整理して」のように頼む</li></ol>'
+    +'<h3>料金</h3><table class="t"><tr><th>プラン</th><th>月額</th><th>デスクトップアプリ</th></tr><tr><td>無料</td><td>¥0</td><td>⚠️ 機能制限あり</td></tr><tr><td>Pro</td><td>約¥3,000</td><td>✅ フル利用可能</td></tr><tr><td>Max</td><td>約¥15,000</td><td>✅ ほぼ無制限</td></tr></table>'
+    +'<div class="ib">💡 <strong>コマンドラインが苦手でもOK。</strong><br>チャット画面で日本語で指示するだけ。AIが裏側でコマンドを実行してくれます。</div>'
+    +'<div class="ib w">⚠️ <strong>注意：AIがファイルを操作します</strong><br>初回は重要でないフォルダで試してください。AIがファイルを変更・削除する前に確認画面が出ますが、念のため。</div>'},
+
+  'result-b-cursor':{c:'tb',e:'⚡',t:'Cursor（AI内蔵エディタ）',s:'インストールするだけ — 15分で開始',
+    b:'<h3>これは何？</h3><p>最初からAIが内蔵されたコードエディタです。コードを見ながらAIとチャットして開発できます。</p>'
+    +'<h3>始め方（15分）</h3><ol><li><a href="https://www.cursor.com/" target="_blank">cursor.com</a> で「Download」をクリック</li><li>ダウンロードしたファイルをダブルクリックしてインストール</li><li>アカウント作成（メールまたはGitHub）</li><li><code>Ctrl + L</code> でAIチャットを開いて質問する</li></ol>'
+    +'<h3>無料でできること</h3><ul><li>月500回のAIコード補完</li><li>月50回のAIチャット（高性能モデル）</li></ul>'
+    +CVT
+    +'<div class="ib">💡 <strong>迷ったらCursorから。</strong>VS Codeとほぼ同じ操作なので、後から乗り換えも簡単です。</div>'},
+
+  'result-b-vscode':{c:'tb',e:'🔧',t:'VS Code + AI拡張',s:'使い慣れた環境にAIを追加 — 15分で開始',
+    b:'<h3>既にVS Codeをお持ちなら</h3><p>AI拡張を1つ追加するだけでOKです。</p>'
+    +'<h3>おすすめのAI拡張</h3><table class="t"><tr><th>拡張</th><th>料金</th><th>特徴</th></tr><tr><td><strong>GitHub Copilot</strong></td><td>無料枠あり / 月$10〜</td><td>最も普及。コード補完が得意</td></tr><tr><td><strong>Claude Code拡張</strong></td><td>API従量課金</td><td>Claudeのフル性能</td></tr><tr><td><strong>Cline</strong></td><td>API従量課金</td><td>複数のAIモデルを選べる</td></tr></table>'
+    +'<h3>インストール方法</h3><ol><li>VS Codeを開く</li><li>左サイドバーの拡張機能アイコン（□が4つ）をクリック</li><li>検索バーに拡張名を入力</li><li>「Install」をクリック</li></ol>'
+    +CVT},
+
+  'result-c':{c:'tc',e:'⚡',t:'Claude Code CLI',s:'セットアップ30〜60分 — フル機能の自動化エージェント',
+    b:'<h3>これは何？</h3><p>ターミナル（コマンドライン）で動くAIエージェントです。デスクトップアプリと似ていますが、<strong>より高度な自動化やスクリプト連携</strong>ができます。</p>'
+    +'<h3>デスクトップアプリとの違い</h3><table class="t"><tr><th></th><th>デスクトップアプリ</th><th>CLI</th></tr><tr><td><strong>操作</strong></td><td>GUI（画面クリック）</td><td>ターミナル（テキスト入力）</td></tr><tr><td><strong>難易度</strong></td><td>★★</td><td>★★★★</td></tr><tr><td><strong>自動化の柔軟性</strong></td><td>○</td><td>◎（スクリプト連携可）</td></tr><tr><td><strong>料金</strong></td><td>Pro $20/月〜</td><td>API従量課金</td></tr></table>'
+    +'<h3>Windowsでの始め方</h3><table class="t"><tr><th>方法</th><th>難易度</th><th>特徴</th></tr><tr><td><strong>① VS Code拡張</strong></td><td>★★</td><td>GUIから操作可能。最も簡単</td></tr><tr><td><strong>② WSL2 + CLI</strong></td><td>★★★★</td><td>フル機能。Windows内にLinux環境を作る</td></tr><tr><td><strong>③ GitHub Codespaces</strong></td><td>★★★</td><td>ブラウザ完結。月60時間無料</td></tr></table>'
+    +'<h3>まずは方法①（VS Code拡張）</h3><ol><li><a href="https://code.visualstudio.com/" target="_blank">VS Code</a> をインストール</li><li>左サイドバーの拡張機能アイコンをクリック</li><li>「Claude Code」を検索して「Install」</li><li>Anthropicアカウントでサインイン</li></ol>'
+    +'<div class="ib w">⚠️ <strong>コスト管理は必ず設定</strong><br>API従量課金です。<a href="https://console.anthropic.com/" target="_blank">Anthropicコンソール</a> → Settings → Spend Limits で月の上限額を設定（最初は$20がおすすめ）。<br><br><strong>APIキーは銀行の暗証番号と同じくらい大切。</strong>他人に送らない・ネットに公開しない。</div>'
+    +'<h3>料金の目安</h3><ul><li>軽い使い方：月$5〜20（約750〜3,000円）</li><li>ヘビーユース：月$20〜50（約3,000〜7,500円）</li></ul>'}
+};
+
+function showR(rid){
+  var r=RS[rid]; if(!r)return;
+  sp(100);
+  CT.innerHTML='<a class="bl" id="bk">&#8592; 戻る</a>'
+  +'<div class="rc"><div class="rh '+r.c+'"><div class="re">'+r.e+'</div><div class="rt">'+r.t+'</div><div class="rs">'+r.s+'</div></div>'
+  +'<div class="rb">'+r.b+'</div></div>'
+  +'<div class="bg"><button class="btn bs" id="rst">最初からやり直す</button></div>';
+  document.getElementById('bk').addEventListener('click',goBack);
+  document.getElementById('rst').addEventListener('click',intro);
 }
 
-function selectOption(qId, idx) {
-  var q = null;
-  for (var i = 0; i < questions.length; i++) { if (questions[i].id === qId) { q = questions[i]; break; } }
-  var opt = q.options[idx];
-  history.push({ type: 'question', id: qId });
-  if (opt.next.indexOf('result-') === 0) { renderResult(opt.next); }
-  else { renderQuestion(opt.next); }
+function goBack(){
+  if(!H.length)return;
+  var p=H.pop();
+  if(p==='intro'){intro();}
+  else{showQ(p);}
 }
 
-function goBack() {
-  if (history.length === 0) return;
-  var prev = history.pop();
-  if (prev.type === 'intro') { renderIntro(); }
-  else { renderQuestion(prev.id); }
-}
-
-function restart() { history = []; renderIntro(); }
-
-renderIntro();
+intro();
 </script>
 </body>
 </html>
